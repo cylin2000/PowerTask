@@ -13,3 +13,7 @@ PowerTask是一个PowerShell写成的类库，专注于Windows下的软件安装
 pt install sqlserver # 就具体安装某个软件，如 pt install vim
 pt uninstall sqlserver 就是卸载
 ```
+
+```
+操他妈的居住证续办
+```
