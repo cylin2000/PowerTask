@@ -1,6 +1,6 @@
 # PowerTask
 
-PowerTask是一个PowerShell写成的类库，不同的是他是在线的，你可以通过一句话引入这个类库
+PowerTask是一个PowerShell写成的在线类库，你可以通过一句话引入这个类库
 
 ## 目标
 
