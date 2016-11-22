@@ -1,6 +1,6 @@
 # PowerTask
 
-PowerTask是一个PowerShell写成的类库，专注于Windows下的软件安装功能
+PowerTask是一个PowerShell写成的类库，不同的是他是在线的，你可以通过一句话引入这个类库
 
 ## 目标
 
