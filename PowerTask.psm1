@@ -5,18 +5,18 @@ function Compress-Zip {
     .DESCRIPTION 
         This task will zip files to a single package
     .EXAMPLE     
-        Zip-File c:\source c:\target.zip
+        Compress-Zip c:\source c:\target.zip
     #>
     Param(
-      [Parameter(Mandatory=$True,HelpMessage="Enter Source Path")][string]$SourcePath,
-      [Parameter(HelpMessage="Enter ZipFileName")][string]$ZipFileName
+      [Parameter(Mandatory=$True,HelpMessage="Enter Source Path")][string]$Path,
+      [Parameter(HelpMessage="Enter Destination FileName")][string]$Destination
     )
     
-    if(!$ZipFileName) {
+    if(!$Destination) {
         $zipfile = $Path + ".zip"
     }     
     else {
-        $zipfile = $ZipFileName
+        $zipfile = $Destination
     }
 
     if(!(test-path($zipfile))) {

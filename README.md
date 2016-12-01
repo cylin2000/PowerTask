@@ -1,18 +1,24 @@
 # PowerTask
 
-PowerTask是一个PowerShell写成的在线类库，你可以通过一句话引入这个类库
+PowerTask是一个PowerShell写成的在线类库，通过一句话引入这个类库，就可以直接使用，方便快捷
 
-## 目标
+## 引入类库
+打开PowerShell命令行，输入以下命令  
 
-* 用户打开PowerShell命令行，输入一行命令即可使用PowerTask提供的功能
-* PowerTask的功能都以函数方式提供，函数提供返回值
-
-## 示例
-
-``` powershell
-Download-File -Path http://www.xxx.com/1.zip -TargetPath c:\test.zip
-
-Zip-File -SourcePath C:\test_folder -FileName C:\test.zip
-
-Extract-File -FileName c:\test.zip -TargetPath c:\target_folder
+``` powershell 
+iex (new-object net.webclient).downloadstring('https://raw.githubusercontent.com/cylin2000/powertask/master/PowerTask.ps1')
 ```
+
+# 查看帮助
+
+``` powerhsell
+Get-Command -Module PowerTask
+Get-Help Compress-Zip
+```
+
+# 调用函数
+``` powershell
+Compress-Zip c:\source c:\target.zip
+```
+
+
