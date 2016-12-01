@@ -11,4 +11,5 @@ Import-Module "$powerTaskPath\PowerTask.psm1" -Force
 Write-Host 
 Write-Host "Loading PowerTask ..." -ForegroundColor Green
 Get-Command -Module PowerTask
+Write-Host 
 Write-Host "PowerTask Loaded Successfully" -ForegroundColor Green
