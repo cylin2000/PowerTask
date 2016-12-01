@@ -7,6 +7,7 @@ function Compress-Zip {
     .EXAMPLE     
         Compress-Zip c:\source c:\target.zip
     #>
+    
     Param(
       [Parameter(Mandatory=$True,HelpMessage="Enter Source Path")][string]$Path,
       [Parameter(HelpMessage="Enter Destination FileName")][string]$Destination
