@@ -1,9 +1,9 @@
 function Compress-Zip {
     <#
     .SYNOPSIS
-        Zip files to a package
+        Compress files to a zip package
     .DESCRIPTION 
-        This task will zip files to a single package
+        This task will compress files to a single zip package
     .EXAMPLE     
         Compress-Zip c:\source c:\target.zip
     #>
@@ -20,7 +20,7 @@ function Compress-Zip {
         $zipfile = $Destination
     }
 
-    if(!(test-path($zipfile))) {
+    if(!(Test-Path($zipfile))) {
         set-content $zipfile ("PK" + [char]5 + [char]6 + ("$([char]0)" * 18))
         (dir $zipfile).IsReadOnly = $false
     }
@@ -28,24 +28,43 @@ function Compress-Zip {
     $shellApplication = new-object -com shell.application
     $zipPackage = $shellApplication.NameSpace($zipfile)
 
-    dir $Path | foreach-object {                
+    dir $Path | foreach-object {           
         $zipPackage.CopyHere(($_.FullName));
         Start-sleep -milliseconds 500
     }
 }
 
 function Expand-Zip {
-    Param(
-        [string]$zipfilename, 
-        [string]$destination
-    )
+    <#
+    .SYNOPSIS    
+        Extract files from a zip package
+    .DESCRIPTION 
+        This task will extract files from a single zip package
+    .EXAMPLE     
+        Expand-Zip -ZipFileName c:\zipfile.zip -Destination c:\targetfolder
+    .EXAMPLE
+        Expand-Zip c:\zipfile.zip c:\targetfolder
+    #>
 
-    if(test-path($zipfilename))
+    Param(
+      [Parameter(Mandatory=$True,HelpMessage="Enter Zip FileName")][string]$ZipFileName,
+      [Parameter(Mandatory=$True,HelpMessage="Enter Destination Path")][string]$Destination
+    )
+     
+    if(Test-Path($ZipFileName))
     {   
         $shellApplication = new-object -com shell.application
-        $zipPackage = $shellApplication.NameSpace($zipfilename)
+        $zipPackage = $shellApplication.NameSpace($ZipFileName)
+        if(!(Test-Path($destination))){
+            $d = New-Item -Path $destination -Type Directory
+            Write-Host "Creating Folder "$d.FullName
+        }
         $destinationFolder = $shellApplication.NameSpace($destination)
-        $destinationFolder.CopyHere($zipPackage.Items())
+        Write-Host "Extracting "$ZipFileName" to "$destination
+
+        #CopyHere parameter definition please refer http://msdn.microsoft.com/en-us/library/bb787866(VS.85).aspx
+        #16:Respond with "Yes to All" for any dialog box that is displayed. It will overwrite the existing files
+        $destinationFolder.CopyHere($zipPackage.Items(),16)
     }
 }
 
