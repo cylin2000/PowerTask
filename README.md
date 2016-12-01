@@ -9,6 +9,8 @@ PowerTask是一个PowerShell写成的在线类库，通过一句话引入这个�
 iex (new-object net.webclient).downloadstring('https://raw.githubusercontent.com/cylin2000/powertask/master/PowerTask.ps1?t='+(Get-Random))
 ```
 
+如需打开PowerShell就默认载入，可以创建 C:\Windows\System32\WindowsPowerShell\v1.0\profile.ps1 并将上一句PowerShell命令放入文件中，下次打开PowerShell就会自动加载
+
 ## 查看帮助
 
 ``` powerhsell
