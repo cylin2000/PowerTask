@@ -6,5 +6,6 @@ if(!(Test-Path $powerTaskPath)){
 }
 $wc.DownloadFile("https://raw.githubusercontent.com/cylin2000/powertask/master/PowerTask.psm1","$powerTaskPath\PowerTask.psm1")
 Import-Module "$powerTaskPath\PowerTask.psm1" -Force
+Write-Host "Loading PowerTask ..." -ForegroundColor Green
 Get-Command -Module PowerTask
 Write-Host "PowerTask Loaded Successfully" -ForegroundColor Green
