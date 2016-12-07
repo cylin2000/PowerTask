@@ -172,11 +172,11 @@ function Invoke-Sql {
 }
 
 
-function Get-DoubanRate {
+function Get-DoubanMovieRate {
     param(
         [Parameter(Mandatory=$True)][String] $name
     )
-
+    
     $wc = New-Object System.Net.WebClient
     $wc.Encoding = [System.Text.Encoding]::UTF8
     $jsonString = $wc.DownloadString("http://api.douban.com/v2/movie/search?q=$name")
