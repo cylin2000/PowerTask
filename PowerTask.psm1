@@ -154,7 +154,7 @@ function Get-WebString {
     
     $wc = New-Object System.Net.WebClient
     $wc.Encoding = [System.Text.Encoding]::UTF8
-    return $wc.DownloadString();
+    return $wc.DownloadString($url);
 }
 
 function Invoke-Sql {
