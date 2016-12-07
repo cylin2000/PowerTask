@@ -157,4 +157,18 @@ function Get-WebString {
     return $wc.DownloadString();
 }
 
+function Invoke-Sql {
+    Param (
+        [Parameter(Mandatory=$True)][String] $ConnectionString,
+        [Parameter(Mandatory=$True)][String] $Sql
+    )
+
+    $Connection = new-object system.data.SqlClient.SqlConnection($ConnectionString);
+    $dataSet = new-object "System.Data.DataSet" "MyDataSet"
+    $dataAdapter = new-object "System.Data.SqlClient.SqlDataAdapter" ($Sql, $Connection)
+    $dataAdapter.Fill($dataSet) | Out-Null
+    $Connection.Close()
+    return $dataSet
+}
+
 Export-ModuleMember "*-*"
