@@ -147,8 +147,14 @@ function Get-WebFile {
     }
 }
 
-function Get-WebString{
-
+function Get-WebString {
+    param(
+        [Parameter(Mandatory=$True)][String] $url
+    )
+    
+    $wc = New-Object System.Net.WebClient
+    $wc.Encoding = [System.Text.Encoding]::UTF8
+    return $wc.DownloadString();
 }
 
 Export-ModuleMember "*-*"
