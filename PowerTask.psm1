@@ -421,10 +421,10 @@ function Get-DoubanMovieRate {
 
 function Get-Software{
     param(
-        [Parameter][String]$Name
+        [Parameter(Mandatory=$False)][String] $Name
     )
 
-    Write-Host $Name
+    Write-Host "Get $Name"
 }
 
 Export-ModuleMember "*-*"
