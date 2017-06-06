@@ -1,0 +1,18 @@
+<config>
+    <baseurl>http://public.caiyunlin.com/</baseurl>
+    <softwares>
+        <software name="7zip"        file="7z-16.04.zip" />
+        <software name="flashfxp"    file="flashfxp-3.6.0.zip" />
+        <software name="git"         file="git-2.12.zip" />
+        <software name="mongodb"     file="mongodb-3.4.2.zip" />
+        <software name="multidesk"   file="multidesk-3.0.zip" />
+        <software name="ncftp"       file="ncftp-3.2.6.zip" />
+        <software name="php"         file="php_with_xdebug-5.6.zip" />
+        <software name="putty"       file="putty-0.63.zip" />
+        <software name="sublimetext" file="sublimetext-3.1.zip" />
+        <software name="svn"         file="tortoisesvn-1.9.5.zip" />
+        <software name="xunlei"      file="thunder-9.1.zip" />
+    </softwares>
+</config>
+
+
