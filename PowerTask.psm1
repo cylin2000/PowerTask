@@ -419,5 +419,12 @@ function Get-DoubanMovieRate {
     return $movie.subjects[0].rating.average
 }
 
+function Get-Software{
+    param(
+        [Parameter][String]$Name
+    )
+
+    Write-Host $Name
+}
 
 Export-ModuleMember "*-*"
