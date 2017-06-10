@@ -421,10 +421,24 @@ function Get-DoubanMovieRate {
 
 function Get-Software{
     param(
-        [Parameter(Mandatory=$False)][String] $Name
+        [Parameter(Mandatory=$False)][String] $Name,
+        [Parameter(Mandatory=$False)][String] $LocalPath = (Join-Path $pwd.Path $url.SubString($url.LastIndexOf('/')))
     )
 
-    Write-Host "Get $Name"
+    Write-Host "Getting $Name"
+
+    $xml = (new-object net.webclient).downloadstring('https://raw.githubusercontent.com/cylin2000/powertask/master/softwares.xml?t='+(Get-Random))
+    $xmlDoc = [xml]$xml
+
+    $xmlDoc
+}
+
+function Install-Software{
+    param(
+        [Parameter(Mandatory=$False)][String] $Name,
+        [Parameter(Mandatory=$False)][String] $InstallPath="c:\apps",
+        [Parameter(Mandatory=$False)][String] $CreateShortCut=$False
+    )
 }
 
 Export-ModuleMember "*-*"
