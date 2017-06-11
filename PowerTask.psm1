@@ -451,10 +451,10 @@ function Get-Software{
         return $LocalPath
     }
     else{
-        Write-Host "Software List:"
+        Write-Host "Please use following command to get software"
         foreach($node in $xmlDoc.SelectNodes("config/softwares/software")){
             $SoftwareName = $node.name
-            Write-Host "    $SoftwareName"
+            Write-Host "    get $SoftwareName"
         }
         return ""
     }
@@ -465,14 +465,26 @@ function Install-Software{
         [Parameter(Mandatory=$False)][String] $Name,
         [Parameter(Mandatory=$False)][String] $InstallPath
     )
-    $LocalFile = Get-Software $Name
-    if($LocalFile -ne ""){
-        if($InstallPath -eq ""){
-            $InstallPath = $Name
+    if($Name -ne ""){
+        $LocalFile = Get-Software $Name
+        if($LocalFile -ne ""){
+            if($InstallPath -eq ""){
+                $InstallPath = $Name
+            }
+            Expand-Zip $LocalFile $InstallPath
+            Write-Host "Removing $LocalFile"
+            Remove-Item $LocalFile
         }
-        Expand-Zip $LocalFile $InstallPath
-        Write-Host "Removing $LocalFile"
-        Remove-Item $LocalFile
+    }
+    else{
+        $xml = (new-object net.webclient).downloadstring('https://raw.githubusercontent.com/cylin2000/powertask/master/softwares.xml?t='+(Get-Random))
+        $xmlDoc = [xml]$xml
+        Write-Host "Please use following command to install software"
+        foreach($node in $xmlDoc.SelectNodes("config/softwares/software")){
+            $SoftwareName = $node.name
+            Write-Host "    install $SoftwareName"
+        }
+        return ""
     }
 }
 
