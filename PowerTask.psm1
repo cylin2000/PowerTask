@@ -121,17 +121,17 @@ function Get-WebFile {
     }
     
     process {
-        Write-Progress -Activity 'Downloading file' -Status $url
+        Write-Progress -Activity 'Downloading file ' -Status $url
         $client.DownloadFileAsync($url, $localFile)
     
         while (!($Global:downloadComplete)) {                
             $pc = $Global:DPCEventArgs.ProgressPercentage
             if ($pc -ne $null) {
-                Write-Progress -Activity 'Downloading file' -Status $url -PercentComplete $pc
+                Write-Progress -Activity 'Downloading file ' -Status $url -PercentComplete $pc
             }
         }
     
-        Write-Progress -Activity 'Downloading file' -Status $url -Complete
+        Write-Progress -Activity 'Downloading file ' -Status $url -Complete
     }
     
     end {
@@ -422,23 +422,47 @@ function Get-DoubanMovieRate {
 function Get-Software{
     param(
         [Parameter(Mandatory=$False)][String] $Name,
-        [Parameter(Mandatory=$False)][String] $LocalPath = (Join-Path $pwd.Path $url.SubString($url.LastIndexOf('/')))
+        [Parameter(Mandatory=$False)][String] $LocalPath
     )
 
     Write-Host "Getting $Name"
 
     $xml = (new-object net.webclient).downloadstring('https://raw.githubusercontent.com/cylin2000/powertask/master/softwares.xml?t='+(Get-Random))
     $xmlDoc = [xml]$xml
+    $baseUrl = $xmlDoc.SelectSingleNode("config/baseurl").InnerText
+    $found = $False
+    foreach($node in $xmlDoc.SelectNodes("config/softwares/software")){
+        if($node.name -eq $Name){
+            $found = $true
+            $url = $baseUrl+$node.file
+            if($LocalPath -eq ""){
+                $LocalPath = (Join-Path $pwd.Path $url.SubString($url.LastIndexOf('/')))
+            }
+            Get-WebFile $url $LocalPath
 
-    $xmlDoc
+            Write-Host "File saved to $LocalPath"
+        }
+    }
+
+    if(!$found){
+        Write-Host "Can't find software $Name"
+    }
+    return $LocalPath
 }
 
 function Install-Software{
     param(
         [Parameter(Mandatory=$False)][String] $Name,
-        [Parameter(Mandatory=$False)][String] $InstallPath="c:\apps",
-        [Parameter(Mandatory=$False)][String] $CreateShortCut=$False
+        [Parameter(Mandatory=$False)][String] $InstallPath
     )
+    $LocalFile = Get-Software $Name
+    if($LocalFile -ne ""){
+        Expand-Zip $LocalFile $Name
+        Remove-Item $LocalFile
+    }
 }
+
+set-alias get               Get-Software                 -Scope Global
+set-alias install           Install-Software             -Scope Global
 
 Export-ModuleMember "*-*"

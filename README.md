@@ -6,6 +6,8 @@ PowerTask是一个PowerShell写成的在线类库，通过一句话引入这个�
 打开PowerShell命令行，输入以下命令  
 
 ``` powershell 
+iex (new-object net.webclient).downloadstring('http://www.caiyunlin.com/dev/powertask/?t='+(Get-Random))
+或者
 iex (new-object net.webclient).downloadstring('https://raw.githubusercontent.com/cylin2000/powertask/master/PowerTask.ps1?t='+(Get-Random))
 ```
 
