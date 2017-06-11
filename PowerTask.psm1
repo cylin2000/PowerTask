@@ -425,29 +425,39 @@ function Get-Software{
         [Parameter(Mandatory=$False)][String] $LocalPath
     )
 
-    Write-Host "Getting $Name"
-
     $xml = (new-object net.webclient).downloadstring('https://raw.githubusercontent.com/cylin2000/powertask/master/softwares.xml?t='+(Get-Random))
     $xmlDoc = [xml]$xml
-    $baseUrl = $xmlDoc.SelectSingleNode("config/baseurl").InnerText
-    $found = $False
-    foreach($node in $xmlDoc.SelectNodes("config/softwares/software")){
-        if($node.name -eq $Name){
-            $found = $true
-            $url = $baseUrl+$node.file
-            if($LocalPath -eq ""){
-                $LocalPath = (Join-Path $pwd.Path $url.SubString($url.LastIndexOf('/')))
+
+    if($Name -ne ""){
+        Write-Host "Getting $Name"
+        $baseUrl = $xmlDoc.SelectSingleNode("config/baseurl").InnerText
+        $found = $False
+        foreach($node in $xmlDoc.SelectNodes("config/softwares/software")){
+            if($node.name -eq $Name){
+                $found = $true
+                $url = $baseUrl+$node.file
+                if($LocalPath -eq ""){
+                    $LocalPath = (Join-Path $pwd.Path $url.SubString($url.LastIndexOf('/')))
+                }
+                Get-WebFile $url $LocalPath
+
+                Write-Host "File saved to $LocalPath"
             }
-            Get-WebFile $url $LocalPath
-
-            Write-Host "File saved to $LocalPath"
         }
-    }
 
-    if(!$found){
-        Write-Host "Can't find software $Name"
+        if(!$found){
+            Write-Host "Can't find software $Name"
+        }
+        return $LocalPath
     }
-    return $LocalPath
+    else{
+        Write-Host "Software List:"
+        foreach($node in $xmlDoc.SelectNodes("config/softwares/software")){
+            $SoftwareName = $node.name
+            Write-Host "    $SoftwareName"
+        }
+        return ""
+    }
 }
 
 function Install-Software{
@@ -457,7 +467,10 @@ function Install-Software{
     )
     $LocalFile = Get-Software $Name
     if($LocalFile -ne ""){
-        Expand-Zip $LocalFile $Name
+        if($InstallPath -eq ""){
+            $InstallPath = $Name
+        }
+        Expand-Zip $LocalFile $InstallPath
         Write-Host "Removing $LocalFile"
         Remove-Item $LocalFile
     }

@@ -10,8 +10,10 @@
         <software name="php"         file="php_with_xdebug-5.6.zip"   description="" />
         <software name="Putty"       file="putty-0.63.zip"            description="" />
         <software name="SublimeText" file="sublimetext-3.1.zip"       description="" />
+        <software name="VSCode"      file="vscode-1.10.2.zip"         description="" />
         <software name="Svn"         file="tortoisesvn-1.9.5.zip"     description="" />
         <software name="XunLei"      file="thunder-9.1.zip"           description="" />
+        
     </softwares>
 </config>
 
