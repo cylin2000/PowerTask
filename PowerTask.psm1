@@ -458,6 +458,7 @@ function Install-Software{
     $LocalFile = Get-Software $Name
     if($LocalFile -ne ""){
         Expand-Zip $LocalFile $Name
+        Write-Host "Removing $LocalFile"
         Remove-Item $LocalFile
     }
 }
