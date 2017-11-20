@@ -3,7 +3,7 @@ Write-Host "Building PowerTask..."
 $scriptPath = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $files = Get-ChildItem "$scriptPath\src"
 $distFile = "$scriptPath\PowerTask.psm1"
-Set-Content $distFile ""
+Set-Content $distFile "" -encoding UTF8
 foreach($file in $files){
     $fileName = $file.FullName
     Write-Host "Processing $fileName"

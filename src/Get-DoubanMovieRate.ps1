@@ -1,4 +1,4 @@
-function Get-DoubanMovieRate {
+﻿function Get-DoubanMovieRate {
     <#
     .SYNOPSIS    
         查询电影的豆瓣评分
