@@ -26,37 +26,34 @@ function Add-FtpFile{
 	$directories = 0
 	
     foreach($item in Get-ChildItem -recurse $Source){ 
-        $realPath = [system.io.path]::GetFullPath($item.FullName).SubString([system.io.path]::GetFullPath($Source).Length)
+        # Get Relative Path
+        $relPath = [system.io.path]::GetFullPath($item.FullName).SubString([system.io.path]::GetFullPath($Source).Length)        
+        # Create Target Directories on FTP server
         if ($item.Attributes -eq "Directory"){
             try{
                 Write-Host Creating FTP directory $item.Name                
-                $makeDirectory = [System.Net.WebRequest]::Create($Target+$realPath);
+                $makeDirectory = [System.Net.WebRequest]::Create($Target+$relPath);
                 $makeDirectory.Credentials = $credentials
                 $makeDirectory.Method = [System.Net.WebRequestMethods+FTP]::MakeDirectory;
                 $makeDirectory.GetResponse();
-				
-				$directories = $directories + 1
-            
+				$directories = $directories + 1            
             }catch [Net.WebException] {
                 Write-Host FTP $item.Name already exists.
 				$directories = $directories - 1
             }
-
             continue;
         }
-        
-        if($realPath -ne ''){
-            "Uploading "+$realPath+"... ["+$item.Length+" Bytes]"
-            $uri = New-Object System.Uri($Target+$realPath)
-            try {
-                $webclient.UploadFile($uri, $item.FullName)
-                Write-Host File $item uploaded`n
-                $length = $length + $item.Length
-                $files = $files + 1
-            } catch [Net.WebException] {
-                Write-Host FAILURE! There was an issue uploading the file $item
-                Write-Host $_
-            }
+        # Upload File  
+        "Uploading "+$relPath+"... ["+$item.Length+" Bytes]"
+        $uri = New-Object System.Uri($Target+$relPath)
+        try {
+            $webclient.UploadFile($uri, $item.FullName)
+            Write-Host File $item uploaded`n
+            $length = $length + $item.Length
+            $files = $files + 1
+        } catch [Net.WebException] {
+            Write-Host FAILURE! There was an issue uploading the file $item
+            Write-Host $_
         }
     }
 	
@@ -65,6 +62,7 @@ function Add-FtpFile{
 	Write-Host `n Uploaded $length Megabytes to $Target.
 	Write-Host Copied $files files and created $directories directories.
 }
+
 
 function Compress-Zip {
     
