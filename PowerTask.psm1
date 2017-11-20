@@ -488,6 +488,48 @@ function Install-Software{
     }
 }
 
+function Get-FtpFile{
+
+    param(
+        [Parameter(Mandatory=$True)][String] $Source,
+        [Parameter(Mandatory=$True)][String] $UserName,
+        [Parameter(Mandatory=$True)][String] $Password,
+        [Parameter(Mandatory=$True)][String] $Target
+    )
+
+    $ftpRequest = [System.Net.FtpWebRequest]::create($Source) 
+    $ftpRequest.Credentials = New-Object System.Net.NetworkCredential($UserName,$Password) 
+    $ftpRequest.Method = [System.Net.WebRequestMethods+Ftp]::DownloadFile 
+    $ftpRequest.UseBinary = $true 
+    $ftpRequest.KeepAlive = $false 
+      
+    $ftpResponse = $ftpRequest.GetResponse() 
+    $responseStream = $ftpResponse.GetResponseStream() 
+      
+    $targetFile = New-Object IO.FileStream ($Target,[IO.FileMode]::Create) 
+    [byte[]]$readBuffer = New-Object byte[] 1024 
+    
+    do{ 
+        $readLength = $responseStream.Read($readBuffer,0,1024) 
+        $targetFile.Write($readBuffer,0,$readLength) 
+    } 
+    while ($readLength -ne 0) 
+    $targetFile.close() 
+}
+
+function Set-FtpFile{
+    param(
+        [Parameter(Mandatory=$True)][String] $Source,
+        [Parameter(Mandatory=$True)][String] $UserName,
+        [Parameter(Mandatory=$True)][String] $Password,
+        [Parameter(Mandatory=$True)][String] $Target
+    )
+
+    Write-Host 'Not Implemented'
+}
+
+
+
 set-alias get               Get-Software                 -Scope Global
 set-alias install           Install-Software             -Scope Global
 
