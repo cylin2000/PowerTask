@@ -1,4 +1,6 @@
+
 function Compress-Zip {
+    
     <#
     .SYNOPSIS
         Compress files to a zip package
@@ -68,15 +70,78 @@ function Expand-Zip {
     }
 }
 
+function Get-DoubanMovieRate {
+    <#
+    .SYNOPSIS    
+        查询电影的豆瓣评�?
+    .DESCRIPTION 
+        This task will extract files from a single zip package
+    .EXAMPLE     
+        Get-DoubanMovieRate '盗梦空间'
+    #>
+
+    param(
+        [Parameter(Mandatory=$True)][String] $name
+    )
+    
+    $wc = New-Object System.Net.WebClient
+    $wc.Encoding = [System.Text.Encoding]::UTF8
+    $jsonString = $wc.DownloadString("http://api.douban.com/v2/movie/search?q=$name")
+    $movie = $jsonString | ConvertFrom-Json
+    return $movie.subjects[0].rating.average
+}
+
+function Get-FtpFile{
+
+    <#
+    .SYNOPSIS    
+        Get File From a FTP Server
+    .DESCRIPTION 
+        This task will download file from a FTP server, you must provide correct FTP uri and username & password information
+    .EXAMPLE     
+        Expand-Zip -ZipFileName c:\zipfile.zip -Destination c:\targetfolder
+    .EXAMPLE
+        Expand-Zip c:\zipfile.zip c:\targetfolder
+    #>
+
+    param(
+        [Parameter(Mandatory=$True)][String] $Source,
+        [Parameter(Mandatory=$True)][String] $UserName,
+        [Parameter(Mandatory=$True)][String] $Password,
+        [Parameter(Mandatory=$False)][String] $Target
+    )
+
+    $ftpRequest = [System.Net.FtpWebRequest]::create($Source) 
+    $ftpRequest.Credentials = New-Object System.Net.NetworkCredential($UserName,$Password) 
+    $ftpRequest.Method = [System.Net.WebRequestMethods+Ftp]::DownloadFile 
+    $ftpRequest.UseBinary = $true 
+    $ftpRequest.KeepAlive = $false 
+      
+    $ftpResponse = $ftpRequest.GetResponse() 
+    $responseStream = $ftpResponse.GetResponseStream() 
+      
+    $targetFile = New-Object IO.FileStream ($Target,[IO.FileMode]::Create) 
+    [byte[]]$readBuffer = New-Object byte[] 1024 
+    
+    do{ 
+        $readLength = $responseStream.Read($readBuffer,0,1024) 
+        $targetFile.Write($readBuffer,0,$readLength) 
+    } 
+    while ($readLength -ne 0) 
+    $targetFile.close() 
+}
+
 function Get-InstalledSoftware {
+    
     <#
     .SYNOPSIS
         Get Installed Softwares on this computer
     .DESCRIPTION
-        This function will return the Installed Software list
+        This function will return the Installed Software list according the registry
     .EXAMPLE
         Get-InstalledSoftware
     #>
+    
     $InstalledSoftware = Get-ChildItem HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\ | Get-ItemProperty
     IF (Test-path HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\){
         $InstalledSoftware += Get-ChildItem HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\ | Get-ItemProperty
@@ -92,7 +157,81 @@ function Get-InstalledSoftware {
     # }
 }
 
+function Get-Software{
+    
+    <#
+    .SYNOPSIS    
+        Get Software from public.caiyunlin.com
+    .DESCRIPTION 
+        Get Software from public.caiyunlin.com
+    .EXAMPLE     
+        Get-Software
+    .EXAMPLE
+        Get-Software '7zip'
+    #>
+
+    param(
+        [Parameter(Mandatory=$False)][String] $Name,
+        [Parameter(Mandatory=$False)][String] $LocalPath
+    )
+
+    $xml = (new-object net.webclient).downloadstring('https://raw.githubusercontent.com/cylin2000/powertask/master/softwares.xml?t='+(Get-Random))
+    $xmlDoc = [xml]$xml
+
+    if($Name -ne ""){
+        Write-Host "Getting $Name"
+        $baseUrl = $xmlDoc.SelectSingleNode("config/baseurl").InnerText
+        $found = $False
+        foreach($node in $xmlDoc.SelectNodes("config/softwares/software")){
+            if($node.name -eq $Name){
+                $found = $true
+                $url = $baseUrl+$node.file
+                if($LocalPath -eq ""){
+                    $LocalPath = (Join-Path $pwd.Path $url.SubString($url.LastIndexOf('/')))
+                }
+                Get-WebFile $url $LocalPath
+
+                Write-Host "File saved to $LocalPath"
+            }
+        }
+
+        if(!$found){
+            Write-Host "Can't find software $Name"
+        }
+        return $LocalPath
+    }
+    else{
+        Write-Host "Please use following command to get software"
+        foreach($node in $xmlDoc.SelectNodes("config/softwares/software")){
+            $SoftwareName = $node.name
+            Write-Host "    get $SoftwareName"
+        }
+        return ""
+    }
+}
+
+function Get-WebContent {
+
+    <#
+    .SYNOPSIS    
+        Get Web Content from a url
+    .DESCRIPTION 
+        It will return a string from a url
+    .EXAMPLE     
+        Get-WebContent http://www.bing.com
+    #>
+
+    param(
+        [Parameter(Mandatory=$True)][String] $url
+    )
+    
+    $wc = New-Object System.Net.WebClient
+    $wc.Encoding = [System.Text.Encoding]::UTF8
+    return $wc.DownloadString($url);
+}
+
 function Get-WebFile {
+    
     <#
     .SYNOPSIS
         Get Installed Softwares on this computer
@@ -103,6 +242,7 @@ function Get-WebFile {
     .NOTES
         Copied from http://poshcode.org/2461
     #>
+
     param(
         [Parameter(Mandatory=$True)][String] $url,
         [Parameter(Mandatory=$False)][String] $localFile = (Join-Path $pwd.Path $url.SubString($url.LastIndexOf('/')))
@@ -147,54 +287,51 @@ function Get-WebFile {
     }
 }
 
-function Get-WebString {
-    param(
-        [Parameter(Mandatory=$True)][String] $url
-    )
+function Install-Software{
     
-    $wc = New-Object System.Net.WebClient
-    $wc.Encoding = [System.Text.Encoding]::UTF8
-    return $wc.DownloadString($url);
-}
+    <#
+    .SYNOPSIS
+        Download and Install Software into computer from Web 
+    .DESCRIPTION
+        This function will Download and Install Software into computer from a URL, if it's a green software, you could use it directly. If it's a install package, you need install it manually
+    .EXAMPLE
+        Install-Software 'putty' c:\users\Administrator\Desktop\putty
+    .NOTES
+        Copied from http://poshcode.org/2461
+    #>
+   
+    
 
-function Invoke-Sql {
-    Param (
-        [Parameter(Mandatory=$True)][String] $ConnectionString,
-        [Parameter(Mandatory=$True)][String] $Sql
+    param(
+        [Parameter(Mandatory=$False)][String] $Name,
+        [Parameter(Mandatory=$False)][String] $InstallPath
     )
 
-    $Connection = new-object system.data.SqlClient.SqlConnection($ConnectionString);
-    $dataSet = new-object "System.Data.DataSet" "MyDataSet"
-    $dataAdapter = new-object "System.Data.SqlClient.SqlDataAdapter" ($Sql, $Connection)
-    $dataAdapter.Fill($dataSet) | Out-Null
-    $Connection.Close()
-    return $dataSet
-}
-
-function Show-BalloonTip {
-[CmdletBinding()] 
-Param (
-    [Parameter(Mandatory=$true)]$Text,
-    [Parameter(Mandatory=$true)]$Title,
-    $Icon = 'Info',
-    $Timeout = $10000
-    )
-Process {
-    Add-Type -AssemblyName System.Windows.Forms
-    If ($PopUp -eq $null)  {
-        $PopUp = New-Object System.Windows.Forms.NotifyIcon
-                        }
-            $Path = Get-Process -Id $PID | Select-Object -ExpandProperty Path
-            $PopUp.Icon = [System.Drawing.Icon]::ExtractAssociatedIcon($Path)
-            $PopUp.BalloonTipIcon = $Icon
-            $PopUp.BalloonTipText = $Text
-            $PopUp.BalloonTipTitle = $Title
-            $PopUp.Visible = $true
-            $PopUp.ShowBalloonTip($Timeout)
-   }
+    if($Name -ne ""){
+        $LocalFile = Get-Software $Name
+        if($LocalFile -ne ""){
+            if($InstallPath -eq ""){
+                $InstallPath = $Name
+            }
+            Expand-Zip $LocalFile $InstallPath
+            Write-Host "Removing $LocalFile"
+            Remove-Item $LocalFile
+        }
+    }
+    else{
+        $xml = (new-object net.webclient).downloadstring('https://raw.githubusercontent.com/cylin2000/powertask/master/softwares.xml?t='+(Get-Random))
+        $xmlDoc = [xml]$xml
+        Write-Host "Please use following command to install software"
+        foreach($node in $xmlDoc.SelectNodes("config/softwares/software")){
+            $SoftwareName = $node.name
+            Write-Host "    install $SoftwareName"
+        }
+        return ""
+    }
 }
 
 function Invoke-FlashWindow {
+    
     <#
         .SYSNOPSIS
             Flashes a window that has been hidden or minimized to the taskbar
@@ -318,6 +455,52 @@ function Invoke-FlashWindow {
     }
 }
 
+function Invoke-Sql {
+    
+    <#
+    .SYNOPSIS
+        Invoke a SQL command
+    .DESCRIPTION 
+        This task execute a SQL command
+    .EXAMPLE     
+        Invoke-Sql 'Server=localhost;Database=MY_DB;Integrated Security=True' 'select * from TestTable'
+    #>
+
+    Param (
+        [Parameter(Mandatory=$True)][String] $ConnectionString,
+        [Parameter(Mandatory=$True)][String] $Sql
+    )
+
+    $Connection = new-object system.data.SqlClient.SqlConnection($ConnectionString);
+    $dataSet = new-object "System.Data.DataSet" "MyDataSet"
+    $dataAdapter = new-object "System.Data.SqlClient.SqlDataAdapter" ($Sql, $Connection)
+    $dataAdapter.Fill($dataSet) | Out-Null
+    $Connection.Close()
+    return $dataSet
+}
+
+function Set-FtpFile{
+    
+    <#
+    .SYNOPSIS
+        Upload a File to FTP Server
+    .DESCRIPTION 
+        This task will Upload a File to FTP Server
+    .EXAMPLE     
+        Set-FtpFile 
+    #>
+
+    param(
+        [Parameter(Mandatory=$True)][String] $Source,
+        [Parameter(Mandatory=$True)][String] $UserName,
+        [Parameter(Mandatory=$True)][String] $Password,
+        [Parameter(Mandatory=$True)][String] $Target
+    )
+
+    Write-Host 'Not Implemented'
+}
+
+
 function Set-TaskbarProgress{
     [cmdletbinding()]
     Param (
@@ -406,131 +589,29 @@ function Set-TaskbarProgress{
     }
 }
 
-
-function Get-DoubanMovieRate {
-    param(
-        [Parameter(Mandatory=$True)][String] $name
-    )
-    
-    $wc = New-Object System.Net.WebClient
-    $wc.Encoding = [System.Text.Encoding]::UTF8
-    $jsonString = $wc.DownloadString("http://api.douban.com/v2/movie/search?q=$name")
-    $movie = $jsonString | ConvertFrom-Json
-    return $movie.subjects[0].rating.average
-}
-
-function Get-Software{
-    param(
-        [Parameter(Mandatory=$False)][String] $Name,
-        [Parameter(Mandatory=$False)][String] $LocalPath
-    )
-
-    $xml = (new-object net.webclient).downloadstring('https://raw.githubusercontent.com/cylin2000/powertask/master/softwares.xml?t='+(Get-Random))
-    $xmlDoc = [xml]$xml
-
-    if($Name -ne ""){
-        Write-Host "Getting $Name"
-        $baseUrl = $xmlDoc.SelectSingleNode("config/baseurl").InnerText
-        $found = $False
-        foreach($node in $xmlDoc.SelectNodes("config/softwares/software")){
-            if($node.name -eq $Name){
-                $found = $true
-                $url = $baseUrl+$node.file
-                if($LocalPath -eq ""){
-                    $LocalPath = (Join-Path $pwd.Path $url.SubString($url.LastIndexOf('/')))
-                }
-                Get-WebFile $url $LocalPath
-
-                Write-Host "File saved to $LocalPath"
-            }
+function Show-BalloonTip {
+    [CmdletBinding()] 
+    Param (
+        [Parameter(Mandatory=$true)]$Text,
+        [Parameter(Mandatory=$true)]$Title,
+        $Icon = 'Info',
+        $Timeout = $10000
+        )
+    Process {
+        Add-Type -AssemblyName System.Windows.Forms
+        If ($PopUp -eq $null)  {
+            $PopUp = New-Object System.Windows.Forms.NotifyIcon
         }
-
-        if(!$found){
-            Write-Host "Can't find software $Name"
-        }
-        return $LocalPath
-    }
-    else{
-        Write-Host "Please use following command to get software"
-        foreach($node in $xmlDoc.SelectNodes("config/softwares/software")){
-            $SoftwareName = $node.name
-            Write-Host "    get $SoftwareName"
-        }
-        return ""
+        $Path = Get-Process -Id $PID | Select-Object -ExpandProperty Path
+        $PopUp.Icon = [System.Drawing.Icon]::ExtractAssociatedIcon($Path)
+        $PopUp.BalloonTipIcon = $Icon
+        $PopUp.BalloonTipText = $Text
+        $PopUp.BalloonTipTitle = $Title
+        $PopUp.Visible = $true
+        $PopUp.ShowBalloonTip($Timeout)
     }
 }
-
-function Install-Software{
-    param(
-        [Parameter(Mandatory=$False)][String] $Name,
-        [Parameter(Mandatory=$False)][String] $InstallPath
-    )
-    if($Name -ne ""){
-        $LocalFile = Get-Software $Name
-        if($LocalFile -ne ""){
-            if($InstallPath -eq ""){
-                $InstallPath = $Name
-            }
-            Expand-Zip $LocalFile $InstallPath
-            Write-Host "Removing $LocalFile"
-            Remove-Item $LocalFile
-        }
-    }
-    else{
-        $xml = (new-object net.webclient).downloadstring('https://raw.githubusercontent.com/cylin2000/powertask/master/softwares.xml?t='+(Get-Random))
-        $xmlDoc = [xml]$xml
-        Write-Host "Please use following command to install software"
-        foreach($node in $xmlDoc.SelectNodes("config/softwares/software")){
-            $SoftwareName = $node.name
-            Write-Host "    install $SoftwareName"
-        }
-        return ""
-    }
-}
-
-function Get-FtpFile{
-
-    param(
-        [Parameter(Mandatory=$True)][String] $Source,
-        [Parameter(Mandatory=$True)][String] $UserName,
-        [Parameter(Mandatory=$True)][String] $Password,
-        [Parameter(Mandatory=$True)][String] $Target
-    )
-
-    $ftpRequest = [System.Net.FtpWebRequest]::create($Source) 
-    $ftpRequest.Credentials = New-Object System.Net.NetworkCredential($UserName,$Password) 
-    $ftpRequest.Method = [System.Net.WebRequestMethods+Ftp]::DownloadFile 
-    $ftpRequest.UseBinary = $true 
-    $ftpRequest.KeepAlive = $false 
-      
-    $ftpResponse = $ftpRequest.GetResponse() 
-    $responseStream = $ftpResponse.GetResponseStream() 
-      
-    $targetFile = New-Object IO.FileStream ($Target,[IO.FileMode]::Create) 
-    [byte[]]$readBuffer = New-Object byte[] 1024 
-    
-    do{ 
-        $readLength = $responseStream.Read($readBuffer,0,1024) 
-        $targetFile.Write($readBuffer,0,$readLength) 
-    } 
-    while ($readLength -ne 0) 
-    $targetFile.close() 
-}
-
-function Set-FtpFile{
-    param(
-        [Parameter(Mandatory=$True)][String] $Source,
-        [Parameter(Mandatory=$True)][String] $UserName,
-        [Parameter(Mandatory=$True)][String] $Password,
-        [Parameter(Mandatory=$True)][String] $Target
-    )
-
-    Write-Host 'Not Implemented'
-}
-
-
 
 set-alias get               Get-Software                 -Scope Global
 set-alias install           Install-Software             -Scope Global
-
 Export-ModuleMember "*-*"

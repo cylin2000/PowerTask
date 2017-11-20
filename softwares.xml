@@ -1,19 +1,19 @@
 <config>
     <baseurl>http://public.caiyunlin.com/</baseurl>
     <softwares>
-        <software name="7Zip"        file="7z-16.04.zip"              description="" />
-        <software name="FlashFxp"    file="flashfxp-3.6.0.zip"        description="" />
-        <software name="Git"         file="git-2.12.zip"              description="" />
-        <software name="MongoDB"     file="mongodb-3.4.2.zip"         description="" />
-        <software name="MultiDesk"   file="multidesk-3.0.zip"         description="" />
-        <software name="NCFtp"       file="ncftp-3.2.6.zip"           description="" />
-        <software name="php"         file="php_with_xdebug-5.6.zip"   description="" />
-        <software name="Putty"       file="putty-0.63.zip"            description="" />
-        <software name="SublimeText" file="sublimetext-3.1.zip"       description="" />
-        <software name="VSCode"      file="vscode-1.10.2.zip"         description="" />
-        <software name="Svn"         file="tortoisesvn-1.9.5.zip"     description="" />
-        <software name="XunLei"      file="thunder-9.1.zip"           description="" />
-        <software name="winscp"      file="winscp-5.1.3.zip"          description="" />
+        <software name="7Zip"        file="7z-16.04.zip"              description="轻巧的压缩解压缩软件" />
+        <software name="FlashFxp"    file="flashfxp-3.6.0.zip"        description="绿色FTP客户端软件" />
+        <software name="Git"         file="git-2.12.zip"              description="Git官方Windows客户端" />
+        <software name="MongoDB"     file="mongodb-3.4.2.zip"         description="MongoDB官方Windows客户端" />
+        <software name="MultiDesk"   file="multidesk-3.0.zip"         description="绿色远程桌面管理软件，单文件，轻巧好用~" />
+        <software name="NCFtp"       file="ncftp-3.2.6.zip"           description="FTP命令行软件，支持文件夹批量上传下载" />
+        <software name="php"         file="php_with_xdebug-5.6.zip"   description="PHP 5.6，支持SQL Server扩展" />
+        <software name="Putty"       file="putty-0.63.zip"            description="快速SSH连接工具，绿色单文件" />
+        <software name="SublimeText" file="sublimetext-3.1.zip"       description="好用的文本编辑工具" />
+        <software name="VSCode"      file="vscode-1.10.2.zip"         description="好用的文本编辑工具" />
+        <software name="Svn"         file="tortoisesvn-1.9.5.zip"     description="Svn Windows客户端" />
+        <software name="XunLei"      file="thunder-9.1.zip"           description="迅雷客户端" />
+        <software name="winscp"      file="winscp-5.1.3.zip"          description="SFTP客户端软件" />
     </softwares>
 </config>
 
