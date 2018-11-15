@@ -40,6 +40,7 @@ function Get-WebFile {
         }
     
         Write-Progress -Activity 'Downloading file ' -Status $url -Complete
+        Write-Verbose "Downloading file $url"
     }
     
     end {
