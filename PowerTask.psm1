@@ -320,8 +320,9 @@ function Get-Software{
         [Parameter(Mandatory=$False)][String] $Name,
         [Parameter(Mandatory=$False)][String] $LocalPath
     )
-
-    $xml = (new-object net.webclient).downloadstring('https://raw.githubusercontent.com/cylin2000/powertask/master/softwares.xml?t='+(Get-Random))
+    $webClient = new-object net.webclient;
+    $webClient.Encoding = System.Text.Encoding.UTF8;
+    $xml = $webClient.downloadstring('https://raw.githubusercontent.com/cylin2000/powertask/master/softwares.xml?t='+(Get-Random))
     $xmlDoc = [xml]$xml
 
     if($Name -ne ""){
@@ -418,6 +419,7 @@ function Get-WebFile {
         }
     
         Write-Progress -Activity 'Downloading file ' -Status $url -Complete
+        Write-Verbose "Downloading file $url"
     }
     
     end {
