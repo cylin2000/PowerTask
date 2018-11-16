@@ -1,15 +1,15 @@
-function Run-External{
+function Invoke-Batch{
     <#
     .SYNOPSIS    
         Execute External Command
     .DESCRIPTION 
         This task will execute external bat command 
     .EXAMPLE     
-        RunExternal -Path "c:\test.bat arg1 arg2 arg3"
+        Invoke-Batch -Path "c:\test.bat arg1 arg2 arg3"
     .EXAMPLE
-        RunExternal -Path "c:\commands\*.bat"
+        Invoke-Batch -Path "c:\commands\*.bat"
     .EXAMPLE
-        RunExternal "C:\commands\*.bat"
+        Invoke-Batch "C:\commands\*.bat"
     .NOTES       
         Please keep above information
     #>
