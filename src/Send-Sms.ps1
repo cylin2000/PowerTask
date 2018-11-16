@@ -5,7 +5,7 @@
     .DESCRIPTION 
         This task will send text message to mobile phone in China, you could request token from http://sms.webchinese.com.cn/
     .EXAMPLE     
-        Send-Sms '13344445555' 'content' 'UID' 'TOKEN' '公司名'
+        Send-Sms '13344445555' 'content' 'UID' 'TOKEN' '签名'
     .NOTES       
         短信发送后返回值    说　明
                     -1  没有该用户账户
