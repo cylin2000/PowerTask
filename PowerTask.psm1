@@ -371,7 +371,7 @@ function Get-WebContent {
     param(
         [Parameter(Mandatory=$True)][String] $url
     )
-    
+    Add-Type -AssemblyName System.Web
     $wc = New-Object System.Net.WebClient
     $wc.Encoding = [System.Text.Encoding]::UTF8
     return $wc.DownloadString($url);
