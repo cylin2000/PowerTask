@@ -437,18 +437,22 @@ function Get-WebFile {
     }
     
     process {
+        $now = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+        Write-Verbose "Start Time $now"
         Write-Progress -Activity 'Downloading file ' -Status $url
         $client.DownloadFileAsync($url, $localFile)
     
         while (!($Global:downloadComplete)) {                
             $pc = $Global:DPCEventArgs.ProgressPercentage
-            if ($pc -ne $null) {
+            if ($null -ne $pc) {
                 Write-Progress -Activity 'Downloading file ' -Status $url -PercentComplete $pc
             }
         }
     
         Write-Progress -Activity 'Downloading file ' -Status $url -Complete
-        Write-Verbose "Downloading file $url"
+        Write-Verbose "Downloded file $url"
+        $now = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+        Write-Verbose "End Time $now"
     }
     
     end {
