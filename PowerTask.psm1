@@ -479,7 +479,7 @@ function Install-PowerTask{
         Install-PowerTask
     #>
     Param (
-        [Parameter(Mandatory=$true)]$Force
+        [Parameter(Mandatory=$False)][switch] $Force
     )
     if($Force){
         # 寮哄埗鏇存柊
