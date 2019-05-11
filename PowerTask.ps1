@@ -1,7 +1,7 @@
 $powerTaskPath = "$env:USERPROFILE\PowerTask"
 if(!(Test-Path $powerTaskPath)){ md $powerTaskPath | Out-Null }
 Write-Host 
-Write-Host "Loading PowerTask ..." -ForegroundColor Green
+Write-Host "Loading Online PowerTask ..." -ForegroundColor Green
 $t = Get-Random
 $wc = New-Object System.Net.WebClient
 $wc.Encoding = [System.Text.Encoding]::UTF8

@@ -491,7 +491,7 @@ function Install-PowerTask{
 
     $profile = "C:\Windows\System32\WindowsPowerShell\v1.0\profile.ps1"
     Set-Content $profile '$powerTaskPath = "$env:USERPROFILE\PowerTask"'
-    Add-Content $profile 'Write-Host "Loading PowerTask ..." -ForegroundColor Green'
+    Add-Content $profile 'Write-Host "Loading Local PowerTask ..." -ForegroundColor Green'
     Add-Content $profile 'Import-Module "$powerTaskPath\PowerTask.psm1" -Force'
     Add-Content $profile 'Get-Command -Module PowerTask'
     Add-Content $profile 'Write-Host "PowerTask Loaded Successfully" -ForegroundColor Green'
