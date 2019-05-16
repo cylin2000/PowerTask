@@ -7,7 +7,8 @@
         <software name="MongoDB"     file="mongodb-3.4.2.zip"         description="MongoDB官方Windows客户端" />
         <software name="MultiDesk"   file="multidesk-3.0.zip"         description="绿色远程桌面管理软件，单文件，轻巧好用~" />
         <software name="NCFtp"       file="ncftp-3.2.6.zip"           description="FTP命令行软件，支持文件夹批量上传下载" />
-        <software name="php"         file="php_with_xdebug-5.6.zip"   description="PHP 5.6，支持SQL Server扩展" />
+        <software name="php"         file="php-5.6.zip"               description="PHP 5.6，支持SQL Server扩展" />
+        <software name="php-dep"     file="php-dep.zip"               description="PHP 5.6 依赖包" />
         <software name="Putty"       file="putty-0.63.zip"            description="快速SSH连接工具，绿色单文件" />
         <software name="SublimeText" file="sublimetext-3.1.zip"       description="好用的文本编辑工具" />
         <software name="VSCode"      file="vscode-1.10.2.zip"         description="好用的文本编辑工具" />
