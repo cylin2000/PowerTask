@@ -321,7 +321,7 @@ function Get-Software{
         [Parameter(Mandatory=$False)][String] $LocalPath
     )
     $webClient = new-object net.webclient;
-    $webClient.Encoding = System.Text.Encoding.UTF8;
+    $webClient.Encoding = [System.Text.Encoding]::UTF8;
     $xml = $webClient.downloadstring('https://raw.githubusercontent.com/cylin2000/powertask/master/softwares.xml?t='+(Get-Random))
     $xmlDoc = [xml]$xml
 
