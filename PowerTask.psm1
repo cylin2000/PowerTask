@@ -101,6 +101,60 @@ function Compress-Zip {
     }
 }
 
+function ConvertFrom-BASE64 { 
+    <#
+    .SYNOPSIS
+        Convert string from BASE64 format
+    .DESCRIPTION
+        Convert string from BASE64 format
+    .EXAMPLE
+        ConvertFrom-BASE64 "YQBiAGMA" 
+    #>
+
+    param(
+        [Parameter(Mandatory=$True)][String] $String
+    )
+
+    $byteArray = [Convert]::FromBase64String($String)
+    [System.Text.UnicodeEncoding]::Unicode.GetString($byteArray)
+    
+}
+
+function ConvertTo-BASE64 { 
+    <#
+    .SYNOPSIS
+        Convert string to BASE64 format
+    .DESCRIPTION
+        Convert string to BASE64 format
+    .EXAMPLE
+        ConvertTo-BASE64 "abc" 
+    #>
+
+    param(
+        [Parameter(Mandatory=$True)][String] $String
+    )
+
+    $byteArray = [System.Text.UnicodeEncoding]::Unicode.GetBytes($String)
+    [Convert]::ToBase64String( $byteArray )
+}
+
+function ConvertTo-MD5 { 
+    <#
+    .SYNOPSIS
+        Convert string to MD5 format
+    .DESCRIPTION
+        Convert string to MD5 format
+    .EXAMPLE
+        ConvertTo-MD5 "abc" 
+    #>
+
+    param(
+        [Parameter(Mandatory=$True)][String] $String
+    )
+
+    Get-StringHash $String "MD5"
+}
+
 function Expand-Zip {
     <#
     .SYNOPSIS    
@@ -378,12 +432,11 @@ function Get-StringHash {
         [Parameter(Mandatory=$True)][String] $String,
         [Parameter(Mandatory=$False)][String] $HashName = "MD5"
     )
-
     $StringBuilder = New-Object System.Text.StringBuilder 
     [System.Security.Cryptography.HashAlgorithm]::Create($HashName).ComputeHash([System.Text.Encoding]::UTF8.GetBytes($String))|%{ 
     [Void]$StringBuilder.Append($_.ToString("x2")) 
     } 
-    $StringBuilder.ToString() 
+    return $StringBuilder.ToString() 
 }
 
 function Get-WebContent {

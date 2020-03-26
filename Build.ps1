@@ -10,6 +10,7 @@ foreach($file in $files){
     $content = Get-Content $fileName
     Add-Content $distFile $content
     Add-Content $distFile ''
+    Start-Sleep 1
 }
 
 Add-Content $distFile 'set-alias get               Get-Software                 -Scope Global'
