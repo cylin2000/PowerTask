@@ -1097,4 +1097,7 @@ function Show-BalloonTip {
 
 set-alias get               Get-Software                 -Scope Global
 set-alias install           Install-Software             -Scope Global
+set-alias md5               ConvertTo-MD5                -Scope Global
+set-alias base64            ConvertTo-BASE64             -Scope Global
+set-alias frombase64        ConvertFrom-BASE64           -Scope Global
 Export-ModuleMember "*-*"
