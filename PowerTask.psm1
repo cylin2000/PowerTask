@@ -591,7 +591,9 @@ function Install-Software{
         }
     }
     else{
-        $xml = (new-object net.webclient).downloadstring('https://raw.githubusercontent.com/cylin2000/powertask/master/softwares.xml?t='+(Get-Random))
+        $webClient = new-object net.webclient;
+        $webClient.Encoding = [System.Text.Encoding]::UTF8;
+        $xml = $webClient.downloadstring('https://raw.githubusercontent.com/cylin2000/powertask/master/softwares.xml?t='+(Get-Random))
         $xmlDoc = [xml]$xml
         Write-Host "Please use following command to install software"
         foreach($node in $xmlDoc.SelectNodes("config/softwares/software")){
