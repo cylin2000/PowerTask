@@ -1,6 +1,4 @@
 <config>
-    <powertask>http://www.soft263.com/dev/PowerTask/</powertask>
-    <softwares>http://www.soft263.com/dev/PowerTask/softwares.xml</softwares>
     <cache></cache>
     <sms_uid></sms_uid>
     <sms_token></sms_token>
