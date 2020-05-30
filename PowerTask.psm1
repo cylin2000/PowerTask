@@ -388,7 +388,7 @@ function Get-Software{
                 $found = $true
                 $url = $baseUrl+$node.file
                 if($LocalPath -eq ""){
-                    $LocalPath = (Join-Path $pwd.Path $url.SubString($url.LastIndexOf('/')))
+                    $LocalPath = (Join-Path $cachePath $url.SubString($url.LastIndexOf('/')))
                 }
                 Get-WebFile $url $LocalPath
 
