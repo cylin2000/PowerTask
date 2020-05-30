@@ -1,7 +1,7 @@
 <config>
     <baseurl>http://public.caiyunlin.com/</baseurl>
     <softwares>
-        <software name="7Zip"        file="7z-16.04.zip"          run=""    description="轻巧的压缩解压缩软件" />
+        <software name="7Zip"        file="7z-18.05.zip"          run=""    description="轻巧的压缩解压缩软件" />
         <software name="FlashFxp"    file="flashfxp-3.6.0.zip"    run=""    description="绿色FTP客户端软件" />
         <software name="Git"         file="git-2.12.zip"          run=""    description="Git官方Windows客户端" />
         <software name="MongoDB"     file="mongodb-3.4.2.zip"     run=""    description="MongoDB官方Windows客户端" />
