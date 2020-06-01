@@ -1099,7 +1099,7 @@ function Show-BalloonTip {
 # Initialize PowerTask
 $global:pt=New-Object System.Collections.Specialized.OrderedDictionary
 
-$softwareDoc =  [xml](Get-Content "$powerTaskPath\softwares.xml")
+$softwareDoc =  [xml](Get-Content "$powerTaskPath\softwares.xml" -Encoding UTF8)
 
 Add-Member -MemberType NoteProperty -InputObject $pt -Name version -Value "1.0"
 Add-Member -MemberType NoteProperty -InputObject $pt -Name softwareDoc -Value $softwareDoc
