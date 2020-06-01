@@ -27,6 +27,7 @@ function Install-Software{
             Expand-Zip $LocalFile $InstallPath
             Write-Host "Removing $LocalFile"
             Remove-Item $LocalFile
+            # Start Install
         }
     }
     else{
