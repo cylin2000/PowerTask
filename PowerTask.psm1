@@ -579,23 +579,43 @@ function Install-Software{
         [Parameter(Mandatory=$False)][String] $InstallPath
     )
 
+    $webClient = new-object net.webclient;
+    $webClient.Encoding = [System.Text.Encoding]::UTF8;
+    $xml = $webClient.downloadstring("$powerTaskUrl/softwares.xml?t="+(Get-Random))
+    $xmlDoc = [xml]$xml
+
     if($Name -ne ""){
-        $LocalFile = Get-Software $Name
-        if($LocalFile -ne ""){
-            if($InstallPath -eq ""){
-                $InstallPath = $Name
+        $baseUrl = $xmlDoc.SelectSingleNode("config/baseurl").InnerText
+        $found = $False
+        foreach($node in $xmlDoc.SelectNodes("config/softwares/software")){
+            if($node.name -eq $Name){
+                $found = $true
+                $url = $baseUrl+$node.file
+                if($LocalPath -eq ""){
+                    $LocalPath = (Join-Path $cachePath $url.SubString($url.LastIndexOf('/')))
+                }
+                $run = $node.run
+                Get-WebFile $url $LocalPath
+                Write-Host "File saved to $LocalPath"
+                if($InstallPath -eq ""){
+                    $InstallPath = "$cachePath\$Name"
+                }
+                Expand-Zip $LocalPath $InstallPath
+                Write-Host "Removing $LocalPath"
+                Remove-Item $LocalPath
+                # Start Install
+                $installBatFile = "$InstallPath\run-install.bat"
+                Set-Content $installBatFile $run
+                Invoke-Batch $installBatFile
             }
-            Expand-Zip $LocalFile $InstallPath
-            Write-Host "Removing $LocalFile"
-            Remove-Item $LocalFile
-            # Start Install
+        }
+
+        if(!$found){
+            Write-Host "Can't find software $Name"
         }
     }
     else{
-        $webClient = new-object net.webclient;
-        $webClient.Encoding = [System.Text.Encoding]::UTF8;
-        $xml = $webClient.downloadstring('http://www.soft263.com/dev/PowerTask/softwares.xml?t='+(Get-Random))
-        $xmlDoc = [xml]$xml
+        
         Write-Host "Please use following command to install software"
         foreach($node in $xmlDoc.SelectNodes("config/softwares/software")){
             $SoftwareName = $node.name
