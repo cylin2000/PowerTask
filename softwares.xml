@@ -2,20 +2,22 @@
     <baseurl>http://public.caiyunlin.com/</baseurl>
     <softwares>
         <software name="7Zip"        file="7z-18.05.zip"          run="7z1805-x64.exe"    description="轻巧的压缩解压缩软件" />
-        <software name="FlashFxp"    file="flashfxp-3.6.0.zip"    run=""    description="绿色FTP客户端软件" />
+        <software name="FlashFxp"    file="flashfxp-3.6.0.zip"    run="start ."    description="绿色FTP客户端软件" />
         <software name="Git"         file="git-2.12.zip"          run="Git-2.12.2-64-bit.exe"    description="Git官方Windows客户端" />
-        <software name="MongoDB"     file="mongodb-3.4.2.zip"     run=""    description="MongoDB官方Windows客户端" />
-        <software name="MultiDesk"   file="multidesk-3.0.zip"     run=""    description="绿色远程桌面管理软件，单文件，轻巧好用~" />
-        <software name="NCFtp"       file="ncftp-3.2.6.zip"       run=""    description="FTP命令行软件，支持文件夹批量上传下载" />
-        <software name="php"         file="php-5.6.zip"           run=""    description="PHP 5.6，支持SQL Server扩展" />
-        <software name="php-dep"     file="php-dep.zip"           run=""    description="PHP 5.6 依赖包" />
+        <software name="MongoDB"     file="mongodb-3.4.2.zip"     run="start ."    description="MongoDB官方Windows客户端" />
+        <software name="MultiDesk"   file="multidesk-3.0.zip"     run="start ."    description="绿色远程桌面管理软件，单文件，轻巧好用~" />
+        <software name="NCFtp"       file="ncftp-3.2.6.zip"       run="start. "    description="FTP命令行软件，支持文件夹批量上传下载" />
+        <software name="php"         file="php-5.6.zip"           run="start ."    description="PHP 5.6，支持SQL Server扩展" />
+        <software name="php-dep"     file="php-dep.zip"           run="start ."    description="PHP 5.6 依赖包" />
         <software name="Putty"       file="putty-0.63.zip"        run="start ."    description="快速SSH连接工具，绿色单文件" />
         <software name="Sublime"     file="sublimetext-3.1.zip"   run="start ."    description="好用的文本编辑工具" />
-        <software name="VSCode"      file="vscode-1.10.2.zip"     run=""    description="好用的文本编辑工具" />
+        <software name="VSCode"      file="vscode-1.10.2.zip"     run="VSCodeSetup-1.10.2.exe"    description="好用的文本编辑工具" />
         <software name="Svn"         file="tortoisesvn-1.9.5.zip" run="TortoiseSVN-1.9.5.27581-x64-svn-1.9.5.msi"    description="Svn Windows客户端" />
-        <software name="XunLei"      file="thunder-9.1.zip"       run=""    description="迅雷客户端" />
+        <software name="XunLei"      file="thunder-9.1.zip"       run="start ."    description="迅雷客户端" />
         <software name="winscp"      file="winscp-5.1.3.zip"      run="start ."    description="SFTP客户端软件" />
         <software name="chrome"      file="chrome-74.0.zip"       run="ChromeStandaloneSetup64.exe"    description="SFTP客户端软件" />
+        <software name="fscapture"   file="fscapture-8.4.zip"     run="start ."    description="桌面截图软件" />
+        <software name="xshell"      file="xshell-5.0.zip"        run="start ."    description="XSchell终端"   />
     </softwares>
 </config>
 
