@@ -591,18 +591,14 @@ function Install-Software{
             if($node.name -eq $Name){
                 $found = $true
                 $url = $baseUrl+$node.file
-                if($LocalPath -eq ""){
-                    $LocalPath = (Join-Path $cachePath $url.SubString($url.LastIndexOf('/')))
-                }
+                $LocalPath = (Join-Path $cachePath $url.SubString($url.LastIndexOf('/')))                
                 $run = $node.run
                 Get-WebFile $url $LocalPath
                 Write-Host "File saved to $LocalPath"
-                if($InstallPath -eq ""){
-                    $InstallPath = "$cachePath\$Name"
-                }
+                $InstallPath = "$cachePath\$Name"                
                 Expand-Zip $LocalPath $InstallPath
-                Write-Host "Removing $LocalPath"
-                Remove-Item $LocalPath
+                #Write-Host "Removing $LocalPath"
+                #Remove-Item $LocalPath
                 # Start Install
                 $installBatFile = "$InstallPath\run-install.bat"
                 Set-Content $installBatFile $run
